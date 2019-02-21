@@ -1,6 +1,10 @@
 package com.diesen.winterkc3;
 
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +26,8 @@ public class VoteActivity extends AppCompatActivity {
     ArrayList<String> textList = new ArrayList<String>();
     ArrayList<String> randamText = new ArrayList<String>();
     ArrayList<Integer> pointList = new ArrayList<Integer>();
+    private SoundPool soundPool;
+    private int se_button,bgm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +35,12 @@ public class VoteActivity extends AppCompatActivity {
         setContentView(R.layout.vote);
 
         Intent intent = getIntent();
+
+        soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+
+        se_button = soundPool.load(this, R.raw.button, 1);
+        bgm = soundPool.load(this, R.raw.opening, 1);
+
 
         textList = (ArrayList<String>)intent.getSerializableExtra("list");
         randamText = this.setRandamList(textList);
@@ -54,6 +66,7 @@ public class VoteActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                soundPool.play(se_button, 3.0f, 3.0f, 0, 0, 1);
                 index++;
                 setPointList(listView.getCheckedItemPosition());
                 if(num < index){
@@ -62,8 +75,8 @@ public class VoteActivity extends AppCompatActivity {
                     intent.putStringArrayListExtra("textList", textList);
                     startActivity(intent);
                 }else{
-//                    listView.clearChoices();
-//                    listView.requestLayout();
+                    listView.clearChoices();
+                    listView.requestLayout();
                     textView.setText(index.toString() + "人目");
                 }
             }
