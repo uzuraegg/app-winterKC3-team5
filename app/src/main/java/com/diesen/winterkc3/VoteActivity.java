@@ -12,13 +12,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
 public class VoteActivity extends AppCompatActivity {
-    Integer num = 5;
-    Integer index = 1;
+    Integer num = 5; //人数
+    Integer index = 1; //1人目
     ArrayList<String> textList = new ArrayList<String>();
+    ArrayList<String> randamText = new ArrayList<String>();
     ArrayList<Integer> pointList = new ArrayList<Integer>();
 
     @Override
@@ -26,6 +28,7 @@ public class VoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vote);
         textList = this.setList();
+        randamText = this.setRandamList(textList);
         pointList = this.initPointList();
 
         final TextView textView = (TextView)findViewById(R.id.playerNum);
@@ -35,10 +38,8 @@ public class VoteActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_single_choice,
-                textList){
-
+                randamText){
         };
-
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -46,7 +47,6 @@ public class VoteActivity extends AppCompatActivity {
 
             }
         });
-
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,8 +56,11 @@ public class VoteActivity extends AppCompatActivity {
                 if(num < index){
                     Intent intent = new Intent(VoteActivity.this, ResultActivity.class);
                     intent.putIntegerArrayListExtra("pointList", pointList);
+                    intent.putStringArrayListExtra("textList", textList);
                     startActivity(intent);
                 }else{
+//                    listView.clearChoices();
+//                    listView.requestLayout();
                     textView.setText(index.toString() + "人目");
                 }
             }
@@ -75,6 +78,11 @@ public class VoteActivity extends AppCompatActivity {
         return aList;
     }
 
+    private ArrayList<String> setRandamList(ArrayList<String> textList){
+        ArrayList<String> randomList = (ArrayList<String>)textList.clone();
+        Collections.shuffle(randomList);
+        return randomList;
+    }
     private ArrayList<Integer> initPointList(){
         ArrayList<Integer> aList = new ArrayList<>();
         for (Integer i = 0; i < this.num; i++){
@@ -84,7 +92,7 @@ public class VoteActivity extends AppCompatActivity {
     }
 
     private void setPointList(int index){
-        String targetString = textList.get(index); //　ここはランダムデータ
+        String targetString = randamText.get(index); //　ここはランダムデータ
         for (Integer i = 0; i < textList.size(); i++){
             // aStringは本来元データからgetして入れるところ
             // 並び替えられたものから 元のidを探して得点を追加する
