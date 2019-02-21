@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class ResultActivity extends AppCompatActivity {
+    private ImageView imgView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +20,9 @@ public class ResultActivity extends AppCompatActivity {
         Intent intent = getIntent();
         ArrayList<Integer> pointList = intent.getIntegerArrayListExtra("pointList");
         Integer maxIndex = this.getHiScoreId(pointList);
+
+        imgView = findViewById(R.id.imageView_res);
+        imgView.setImageBitmap(UploadActivity.img);
 
         final TextView scoreText = (TextView)findViewById(R.id.winNum);
         // indexは0オリジン -> 人は1オリジン
